@@ -1,5 +1,6 @@
+import os
 from flask import Flask, render_template, request, redirect, session, flash, url_for
-from config import get_db_connection
+from werkzeug.utils  import secure_filename
 import hashlib
 
 app = Flask(
@@ -9,6 +10,7 @@ app = Flask(
 )
 
 app.secret_key = "adindiahub_secret_key"
+
 
 import mysql.connector
 
@@ -41,6 +43,14 @@ def contact():
         return redirect("/contact")
 
     return render_template("contact.html")
+
+# Upload folder setup
+UPLOAD_FOLDER = os.path.join(app.static_folder, "ads_videos")
+app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
+
+if not os.path.exists(UPLOAD_FOLDER):
+    os.makedirs(UPLOAD_FOLDER)
+
 
 
 @app.route("/about")
@@ -117,6 +127,45 @@ def admin_dashboard():
     if session.get("role") != "admin":
         return redirect("/login")
     return render_template("admin_dashboard.html")
+
+@app.route("/upload-ad-video", methods=["GET", "POST"])
+def upload_ad_video():
+    if request.method == "POST":
+        if "ad_video" not in request.files:
+            flash("No file selected")
+            return redirect(request.url)
+
+        file = request.files["ad_video"]
+
+        if file.filename == "":
+            flash("No selected file")
+            return redirect(request.url)
+
+        filename = secure_filename(file.filename)
+        save_path = os.path.join(app.config["UPLOAD_FOLDER"], filename)
+        file.save(save_path)
+
+        flash("Ad video uploaded successfully!")
+        return redirect(url_for("admin_dashboard"))
+
+    return render_template("upload_ad.html") 
+@app.route("/view-clients")
+def view_clients():
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM clients")
+    clients = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return render_template("view_clients.html", clients=clients)
+
+
+@app.route("/admin/videos")
+def admin_videos():
+    video_folder = app.config["UPLOAD_FOLDER"]
+    videos = os.listdir(video_folder)
+    return render_template("admin_videos.html", videos=videos)
+
 
 @app.route("/admin/messages")
 def admin_messages():
@@ -250,18 +299,56 @@ def admin_campaign_requests():
             cr.start_date,
             cr.end_date,
             cr.status,
+            cr.ad_video,
             cl.name AS client_name
         FROM campaign_requests cr
         JOIN clients cl ON cr.client_id = cl.id
         ORDER BY cr.request_id DESC
     """)
-
     requests = cursor.fetchall()
+
+    # video list
+    video_folder = app.config["UPLOAD_FOLDER"]
+    videos = os.listdir(video_folder)
 
     cursor.close()
     conn.close()
 
-    return render_template("admin_campaign_requests.html", requests=requests)
+    return render_template(
+        "admin_campaign_requests.html",
+        requests=requests,
+        videos=videos
+    )
+
+@app.route("/campaign-list")
+def campaign_list():
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    query = """
+    SELECT 
+        campaigns.id,
+        campaigns.campaign_name,
+        clients.name AS client_name,
+        campaigns.platform,
+        campaigns.budget,
+        campaigns.status
+    FROM campaigns
+    JOIN clients ON campaigns.client_id = clients.id
+    """
+
+    cursor.execute(query)
+    campaigns = cursor.fetchall()
+    conn.close()
+
+    return render_template("campaign_list.html", campaigns=campaigns)
+
+import os
+
+UPLOAD_FOLDER = app.config["UPLOAD_FOLDER"]
+
+
+
 
 @app.route("/approve-request/<int:request_id>")
 def approve_request(request_id):
@@ -324,6 +411,30 @@ def reject_request(request_id):
 
     flash("Campaign Request Rejected ❌")
     return redirect("/admin-campaign-requests")
+
+@app.route("/assign-video/<int:request_id>", methods=["POST"])
+def assign_video(request_id):
+    if session.get("role") != "admin":
+        return redirect("/login")
+
+    video = request.form["ad_video"]
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        UPDATE campaign_requests
+        SET ad_video=%s, status='Approved'
+        WHERE request_id=%s
+    """, (video, request_id))
+
+    conn.commit()
+    conn.close()
+
+    flash("Video assigned successfully!")
+    return redirect("/admin-campaign-requests")
+
+
 
 
 @app.route("/client/logout")
@@ -430,20 +541,17 @@ def edit_campaign(id):
 
 @app.route("/delete-campaign/<int:id>")
 def delete_campaign(id):
-    if session.get("role") != "admin":
-        return redirect("/login")
-
     conn = get_db_connection()
     cursor = conn.cursor()
 
-    cursor.execute("DELETE FROM campaigns WHERE campaign_id=%s", (id,))
+    cursor.execute("DELETE FROM campaigns WHERE id = %s", (id,))
     conn.commit()
 
     cursor.close()
     conn.close()
 
-    flash("Campaign deleted successfully ❌")
-    return redirect("/view-campaigns")
+    return redirect("/client-dashboard")
+
 
 
 # ---------------- ADD CLIENT (ADMIN ONLY) ----------------
@@ -458,16 +566,16 @@ def add_client():
         conn = get_db_connection()
         cursor = conn.cursor()
 
-        cursor.execute(
-            "INSERT INTO clients (name, email, phone, company_name) VALUES (%s, %s, %s, %s)",
-            (name, email, phone, company_name)
-        )
+        cursor.execute("""
+            INSERT INTO clients (name, email, phone, company_name)
+            VALUES (%s, %s, %s, %s)
+        """, (name, email, phone, company_name))
 
         conn.commit()
         cursor.close()
         conn.close()
 
-        return redirect("/admin-dashboard")
+        return redirect("/view-clients")
 
     return render_template("add_client.html")
 
