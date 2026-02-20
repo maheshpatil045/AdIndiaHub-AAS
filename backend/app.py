@@ -1,5 +1,5 @@
 import os
-from flask import Flask, render_template, request, redirect, session, flash, url_for
+from flask import Flask, render_template, request, redirect, session, flash, url_for, jsonify
 from werkzeug.utils import secure_filename
 
 app = Flask(
@@ -21,11 +21,14 @@ def get_db_connection():
         database="adindiahub_db"
     )
 
-
+#   ---------------- HOME PAGE ----------------
 
 @app.route("/")
 def home():
     return render_template("home.html")
+
+# ---------------- CONTACT PAGE ----------------
+
 @app.route("/contact", methods=["GET", "POST"])
 def contact():
     if request.method == "POST":
@@ -55,6 +58,10 @@ if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
 
 
+UPLOAD_FOLDER = os.path.join(app.static_folder, "profile_photos")
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
+# ---------------- ABOUT PAGE ----------------
 
 @app.route("/about")
 def about():
@@ -63,6 +70,7 @@ def about():
 
 
 # ---------------- LOGIN ----------------
+
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
@@ -109,6 +117,7 @@ def login():
 
 
 # ---------------- REGISTER (CLIENT ONLY) ----------------
+
 @app.route("/register", methods=["GET", "POST"])
 def client_register():
     if request.method == "POST":
@@ -140,6 +149,7 @@ def client_register():
     return render_template("register.html")
 
 # ---------------- ADMIN DASHBOARD ----------------
+
 @app.route("/admin-dashboard")
 def admin_dashboard():
     if session.get("role") != "admin":
@@ -178,6 +188,7 @@ def admin_dashboard():
         video_count=video_count
     )
 
+# ---------------- UPLOAD AD VIDEO (ADMIN ONLY) ----------------
 
 @app.route("/upload-ad-video", methods=["GET", "POST"])
 def upload_ad_video():
@@ -202,6 +213,13 @@ def upload_ad_video():
     return render_template("upload_ad.html")
 
 
+# Route for platform page
+@app.route('/platform')
+def platform():
+    return render_template('adindiahub_platform.html')
+
+# ---------------- VIEW CLIENTS (ADMIN ONLY) ----------------
+
 @app.route("/view-clients")
 def view_clients():
     conn = get_db_connection()
@@ -212,6 +230,7 @@ def view_clients():
     conn.close()
     return render_template("view_clients.html", clients=clients)
 
+# ---------------- ADMIN VIDEOS ----------------
 
 @app.route("/admin/videos")
 def admin_videos():
@@ -219,6 +238,7 @@ def admin_videos():
     videos = os.listdir(video_folder)
     return render_template("admin_videos.html", videos=videos)
 
+# ---------------- ADMIN MESSAGES ----------------
 
 @app.route("/admin/messages")
 def admin_messages():
@@ -230,6 +250,7 @@ def admin_messages():
     conn.close()
     return render_template("admin_messages.html", messages=messages)
 
+# ---------------- CLIENT LOGIN ----------------
 
 @app.route("/login", methods=["GET", "POST"])
 def client_login():
@@ -257,7 +278,10 @@ def client_login():
 
     return render_template("login.html")
 
+
+
 # ---------------- CLIENT DASHBOARD ----------------
+
 @app.route("/client-dashboard")
 def client_dashboard():
     if session.get("role") != "client":
@@ -291,6 +315,7 @@ def client_dashboard():
         client=client,
         campaigns=campaigns
     )
+# ---------------- EDIT PROFILE (CLIENT ONLY) ----------------
 
 import os
 from werkzeug.utils import secure_filename
@@ -345,6 +370,7 @@ def edit_profile():
 
     return render_template("edit_profile.html", client=client)
 
+# ---------------- REQUEST CAMPAIGN (CLIENT ONLY) ----------------
 
 @app.route("/request-campaign", methods=["GET", "POST"])
 def request_campaign():
@@ -378,6 +404,8 @@ def request_campaign():
 
     return render_template("request_campaign.html")
 
+#  ---------------- MY CAMPAIGN REQUESTS (CLIENT ONLY) ----------------
+
 @app.route("/my-campaign-requests")
 def my_campaign_requests():
     if session.get("role") != "client":
@@ -402,6 +430,30 @@ def my_campaign_requests():
 
     return render_template("my_campaign_requests.html", requests=requests)
 
+# ---------------- SUBMIT FEEDBACK (CLIENT ONLY) ----------------
+
+@app.route('/submit-feedback', methods=['POST'])
+def submit_feedback():
+    campaign_id = request.form.get('campaign_id')
+    stars = request.form.get('stars')
+    comment = request.form.get('comment')
+    client_id = session.get('client_id')
+
+    print(campaign_id, stars, comment)  # DEBUG
+
+    conn = mysql.connector.connect(host="localhost", user="root", password="", database="adindiahub_db")
+    cur = conn.cursor()
+
+    cur.execute("INSERT INTO video_feedback (campaign_id, client_id, stars, comment) VALUES (%s,%s,%s,%s)",
+                (campaign_id, client_id, stars, comment))
+
+    conn.commit()
+    cur.close()
+    conn.close()
+
+    return redirect('/client-dashboard')
+
+# ---------------- DELETE CAMPAIGN (CLIENT) ----------------
 
 @app.route("/delete-my-campaign/<int:campaign_id>")
 def delete_my_campaign(campaign_id):
@@ -421,6 +473,10 @@ def delete_my_campaign(campaign_id):
     conn.close()
 
     return redirect("/client-dashboard")
+
+
+
+
 # ---------------- ADMIN CAMPAIGN REQUESTS ----------------
 
 @app.route("/admin-campaign-requests")
@@ -458,6 +514,8 @@ def admin_campaign_requests():
 
     return render_template("admin_campaign_requests.html", requests=requests, videos=videos)
 
+# ---------------- VIEW CAMPAIGNS (ADMIN ONLY) ----------------
+
 @app.route("/campaign-list")
 def campaign_list():
     conn = get_db_connection()
@@ -485,6 +543,26 @@ import os
 
 UPLOAD_FOLDER = app.config["UPLOAD_FOLDER"]
 
+# ---------------- VIEW FEEDBACK (ADMIN ONLY) ----------------
+
+@app.route('/view-feedback')
+def view_feedback():
+    conn =  get_db_connection()
+    cur = conn.cursor(dictionary=True)
+
+    cur.execute("""
+        SELECT vf.stars, vf.comment, c.campaign_name, cl.name
+        FROM video_feedback vf
+        JOIN campaigns c ON vf.campaign_id = c.campaign_id
+        JOIN clients cl ON vf.client_id = cl.id
+        ORDER BY vf.created_at DESC
+    """)
+    
+    feedbacks = cur.fetchall()
+    return render_template("admin_feedback.html", feedbacks=feedbacks)
+
+
+# ---------------- APPROVE REQUEST ----------------
 
 @app.route("/approve-request/<int:request_id>")
 def approve_request(request_id):
@@ -503,9 +581,10 @@ def approve_request(request_id):
     cursor.close()
     conn.close()
 
-    flash("Campaign approved ✅ Now assign video")
+    flash("Campaign approved  Now assign video")
     return redirect("/admin-campaign-requests")
 
+# ---------------- REJECT REQUEST ----------------
 
 @app.route("/reject-request/<int:request_id>")
 def reject_request(request_id):
@@ -524,8 +603,10 @@ def reject_request(request_id):
     cursor.close()
     conn.close()
 
-    flash("Campaign Request Rejected ❌")
+    flash("Campaign Request Rejected ")
     return redirect("/admin-campaign-requests")
+
+# ---------------- ASSIGN VIDEO TO APPROVED REQUEST ----------------
 
 @app.route("/assign-video/<int:request_id>", methods=["POST"])
 def assign_video(request_id):
@@ -535,7 +616,7 @@ def assign_video(request_id):
     ad_video = request.form.get("ad_video")
 
     if not ad_video:
-        flash("Please select a video ❌")
+        flash("Please select a video ")
         return redirect("/admin-campaign-requests")
 
     conn = get_db_connection()
@@ -574,6 +655,8 @@ def assign_video(request_id):
     flash("Campaign approved with video 🎥")
     return redirect("/admin-campaign-requests")
 
+# ---------------- ADMIN CAMPAIGNS ----------------
+
 @app.route("/admin-campaigns")
 def admin_campaigns():
     if session.get("role") != "admin":
@@ -595,44 +678,13 @@ def admin_campaigns():
     conn.close()
     return render_template("admin_campaigns.html", campaigns=campaigns)
 
-
+# ---------------- CLIENT LOGOUT ----------------
 @app.route("/client/logout")
 def client_logout():
     session.clear()
     return redirect("/")
 
-
-# ---------------- ADD CAMPAIGN (ADMIN ONLY) ----------------
-@app.route("/add-campaign", methods=["GET", "POST"])
-def add_campaign():
-    conn = get_db_connection()
-    cursor = conn.cursor(dictionary=True)
-
-    if request.method == "POST":
-        campaign_name = request.form.get("campaign_name")
-        client_id = request.form.get("client_id")
-        platform = request.form.get("platform")
-        budget = request.form.get("budget")
-        start_date = request.form.get("start_date")
-        end_date = request.form.get("end_date")
-
-        cursor.execute("""
-            INSERT INTO campaigns 
-            (campaign_name, client_id, platform, budget, start_date, end_date)
-            VALUES (%s, %s, %s, %s, %s, %s)
-        """, (campaign_name, client_id, platform, budget, start_date, end_date))
-
-        conn.commit()
-        cursor.close()
-        conn.close()
-        return redirect("/admin-dashboard")
-
-    cursor.execute("SELECT id, name FROM clients")
-    clients = cursor.fetchall()
-
-    cursor.close()
-    conn.close()
-    return render_template("add_campaign.html", clients=clients)
+# ---------------- VIEW CAMPAIGNS (ADMIN ONLY) ----------------
 
 @app.route("/view-campaigns")
 def view_campaigns():
@@ -661,6 +713,8 @@ def view_campaigns():
     conn.close()
 
     return render_template("view_campaigns.html", campaigns=campaigns)
+
+# ---------------- EDIT CAMPAIGN (ADMIN ONLY) ----------------
 
 @app.route("/edit-campaign/<int:id>", methods=["GET", "POST"])
 def edit_campaign(id):
@@ -703,6 +757,7 @@ def edit_campaign(id):
     conn.close()
     return render_template("edit_campaign.html", campaign=campaign)
 
+# ---------------- DELETE CAMPAIGN (ADMIN ONLY) ----------------
 @app.route("/delete-campaign/<int:campaign_id>")
 def delete_campaign(campaign_id):
     if session.get("role") != "admin":
@@ -724,30 +779,7 @@ def delete_campaign(campaign_id):
 
 
 
-# ---------------- ADD CLIENT (ADMIN ONLY) ----------------
-@app.route("/add-client", methods=["GET", "POST"])
-def add_client():
-    if request.method == "POST":
-        name = request.form["client_name"]
-        email = request.form["email"]
-        phone = request.form["phone"]
-        company_name = request.form["company_name"]
-
-        conn = get_db_connection()
-        cursor = conn.cursor()
-
-        cursor.execute("""
-            INSERT INTO clients (name, email, phone, company_name)
-            VALUES (%s, %s, %s, %s)
-        """, (name, email, phone, company_name))
-
-        conn.commit()
-        cursor.close()
-        conn.close()
-
-        return redirect("/view-clients")
-
-    return render_template("add_client.html")
+# ---------------- client profile ----------------
 
 @app.route('/client-profile')
 def client_profile():
