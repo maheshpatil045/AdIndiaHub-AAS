@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <title>Request Campaign - AdIndiaHub</title>
 
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
 <style>
 *{
     margin:0;
@@ -15,54 +18,104 @@
 body{
     height:100vh;
     display:flex;
+    background: linear-gradient(135deg,#0f0c29,#302b63,#24243e);
+    overflow:hidden;
 }
 
-/* Left Section */
+/* Animated Marketing Background Shapes */
+.bg-shape1, .bg-shape2{
+    position:absolute;
+    border-radius:50%;
+    filter: blur(80px);
+    opacity:0.6;
+}
+
+.bg-shape1{
+    width:400px;
+    height:400px;
+    background:#ff512f;
+    top:-100px;
+    left:-100px;
+}
+
+.bg-shape2{
+    width:450px;
+    height:450px;
+    background:#1cc7ff;
+    bottom:-150px;
+    right:-150px;
+}
+
+/* Back Button */
+.back-btn{
+    position:fixed;
+    top:15px;
+    left:20px;
+    color:white;
+    font-size:20px;
+    background:rgba(0,0,0,0.5);
+    padding:10px 14px;
+    border-radius:50%;
+    text-decoration:none;
+    transition:0.3s;
+}
+
+.back-btn:hover{
+    background:black;
+    transform:scale(1.1);
+}
+
+/* LEFT MARKETING PANEL */
 .left{
     width:50%;
-    background:linear-gradient(135deg,#0f2c5f,#0a4fa3);
     color:white;
     display:flex;
     flex-direction:column;
     justify-content:center;
-    align-items:center;
-    text-align:center;
-    padding:40px;
+    padding:60px;
+    z-index:2;
 }
 
 .left h1{
-    font-size:48px;
-    margin-bottom:15px;
+    font-size:50px;
+    font-weight:bold;
+    line-height:1.2;
+}
+
+.left span{
+    color:#1cc7ff;
 }
 
 .left p{
     font-size:18px;
+    margin-top:15px;
     opacity:0.9;
 }
 
-/* Right Section */
+/* RIGHT FORM PANEL */
 .right{
     width:50%;
-    background:linear-gradient(135deg,#1b2a88,#22a6df);
     display:flex;
     justify-content:center;
     align-items:center;
+    z-index:2;
 }
 
-/* Form Box */
+/* Glass Card Form */
 .box{
-    width:380px;
-    background:rgba(255,255,255,0.15);
-    backdrop-filter:blur(10px);
-    padding:30px;
-    border-radius:12px;
-    box-shadow:0 10px 30px rgba(0,0,0,0.2);
+    width:420px;
+    background:rgba(255,255,255,0.12);
+    backdrop-filter: blur(15px);
+    padding:35px;
+    border-radius:18px;
+    box-shadow:0 20px 50px rgba(0,0,0,0.5);
     color:white;
 }
 
 .box h2{
     text-align:center;
     margin-bottom:20px;
+    font-size:22px;
 }
 
 /* Inputs */
@@ -73,13 +126,14 @@ input, select, textarea{
     border:none;
     border-radius:8px;
     outline:none;
-    background:rgba(255,255,255,0.3);
+    background:rgba(255,255,255,0.25);
     color:white;
+    font-size:14px;
 }
 
 input::placeholder,
 textarea::placeholder{
-    color:#e0e0e0;
+    color:#ddd;
 }
 
 select option{
@@ -87,9 +141,9 @@ select option{
 }
 
 label{
+    margin-top:10px;
     display:block;
-    margin-top:12px;
-    font-size:14px;
+    font-size:13px;
 }
 
 /* Button */
@@ -98,39 +152,49 @@ button{
     padding:12px;
     margin-top:20px;
     border:none;
-    border-radius:25px;
-    background:linear-gradient(135deg,#1cc7ff,#0d6efd);
+    border-radius:30px;
+    background:linear-gradient(135deg,#ff512f,#dd2476);
     color:white;
     font-size:16px;
+    font-weight:bold;
     cursor:pointer;
     transition:0.3s;
 }
 
 button:hover{
-    transform:scale(1.05);
-    box-shadow:0 5px 15px rgba(0,0,0,0.3);
+    transform:translateY(-3px);
+    box-shadow:0 12px 30px rgba(0,0,0,0.5);
 }
 </style>
 </head>
 
 <body>
 
-<!-- Left Side -->
+<div class="bg-shape1"></div>
+<div class="bg-shape2"></div>
+
+<!-- Back Icon -->
+<a href="/client-dashboard" class="back-btn">
+    <i class="fas fa-arrow-left"></i>
+</a>
+
+<!-- Left Marketing Section -->
 <div class="left">
-    <h1>AdIndiaHub</h1>
-    <p>Create powerful campaigns and manage your clients in one place</p>
+    <h1>Promote Your <span>Brand</span><br> Across Top Platforms</h1>
+    <p>Manage Ads, Budget, Clients & Performance in one smart platform.</p>
 </div>
 
-<!-- Right Side -->
+<!-- Right Campaign Form -->
 <div class="right">
     <div class="box">
-        <h2>Request New Campaign</h2>
+        <h2>🚀 Create New Advertising Campaign</h2>
 
         <form method="POST" action="/request-campaign">
+
             <input type="text" name="campaign_name" placeholder="Campaign Name" required>
 
             <select name="platform" required>
-                <option value="">Select Platform</option>
+                <option value="">Select Advertising Platform</option>
                 <option>Google Ads</option>
                 <option>Facebook Ads</option>
                 <option>Instagram Ads</option>
@@ -138,7 +202,7 @@ button:hover{
                 <option>MakeMyTrip</option>
             </select>
 
-            <input type="number" name="budget" placeholder="Budget" required>
+            <input type="number" name="budget" placeholder="Budget (₹)" required>
 
             <label>Start Date</label>
             <input type="date" name="start_date" required>
@@ -146,9 +210,10 @@ button:hover{
             <label>End Date</label>
             <input type="date" name="end_date" required>
 
-            <textarea name="message" placeholder="Message for Admin (optional)"></textarea>
+            <textarea name="message" placeholder="Campaign Message for Admin"></textarea>
 
-            <button type="submit">Send Request</button>
+            <button type="submit">Submit Campaign Request</button>
+
         </form>
     </div>
 </div>

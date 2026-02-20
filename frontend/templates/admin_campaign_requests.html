@@ -1,99 +1,187 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Campaign Requests</title>
-    <style>
-        body { font-family: Arial; background:#f4f6f8; }
-        table {
-            width:95%;
-            margin:30px auto;
-            border-collapse:collapse;
-            background:white;
-        }
-        th, td {
-            padding:10px;
-            border:1px solid #ccc;
-            text-align:center;
-        }
-        th { background:#0d6efd; color:white; }
-        a {
-            padding:6px 10px;
-            text-decoration:none;
-            color:white;
-            border-radius:4px;
-        }
-        .approve { background:green; }
-        .reject { background:red; }
-        .pending { color:orange; }
-        .approved { color:green; }
-        .rejected { color:red; }
+<title>Admin Campaign Requests - AdIndiaHub</title>
 
-        select, button {
-            padding:6px;
-        }
+<style>
+body{
+    margin:0;
+    font-family:'Poppins',sans-serif;
+    background:#f5f7fa;
+    color:#333;
+}
 
-        .badge{
-    padding:6px 12px;
-    border-radius:20px;
+/* HEADER */
+.header{
+    background:#ffffff;
+    padding:15px 40px;
+    font-size:22px;
+    font-weight:bold;
+    color:#1e4b8c;
+    box-shadow:0 2px 10px rgba(0,0,0,0.05);
+    border-bottom:1px solid #eaeef2;
+}
+
+/* TABLE CONTAINER */
+.table-box{
+    padding:30px;
+}
+
+/* TABLE */
+table{
+    width:100%;
+    border-collapse:collapse;
+    background:#ffffff;
+    border-radius:10px;
+    overflow:hidden;
+    box-shadow:0 5px 20px rgba(0,0,0,0.03);
+    border:1px solid #eef2f6;
+}
+
+th,td{
+    padding:14px;
+    text-align:center;
+    border-bottom:1px solid #eef2f6;
+}
+
+th{
+    background:#f8fafd;
+    color:#1e4b8c;
+    font-size:15px;
     font-weight:600;
+}
+
+tr:hover{
+    background:#f9fcff;
+}
+
+/* BUTTONS */
+a{
+    padding:7px 14px;
+    text-decoration:none;
+    color:white;
+    border-radius:5px;
     font-size:14px;
+    font-weight:500;
+    display:inline-block;
 }
-.green{
-    background:#16a34a;
+
+.approve{ background:#27ae60; }
+.reject{ background:#e74c3c; }
+
+.approve:hover{ background:#2ecc71; }
+.reject:hover{ background:#ff6b6b; }
+
+/* SELECT + BUTTON */
+select,button{
+    padding:7px 10px;
+    border-radius:5px;
+    border:1px solid #dde4ea;
+    font-weight:500;
+    background:white;
+    color:#333;
+}
+
+select{
+    background:white;
+    margin-right:5px;
+}
+
+button{
+    background:#3498db;
     color:white;
+    border:none;
+    cursor:pointer;
 }
-.red{
-    background:#dc2626;
-    color:white;
+
+button:hover{
+    background:#2980b9;
 }
-    </style>
+
+/* STATUS COLORS */
+.pending{ color:#f39c12; font-weight:600;}
+.approved{ color:#27ae60; font-weight:600;}
+.rejected{ color:#e74c3c; font-weight:600;}
+.assigned{ color:#3498db; font-weight:600;}
+
+/* BADGE */
+.badge{
+    padding:6px 14px;
+    border-radius:20px;
+    font-size:13px;
+    font-weight:500;
+}
+
+.red{ background:#fee9e7; color:#e74c3c; }
+.green{ background:#e3f7ec; color:#27ae60; }
+</style>
 </head>
+
 <body>
 
-<h2 style="text-align:center;">Campaign Requests (Admin)</h2>
+<div class="header">Campaign Requests</div>
+
+<div class="table-box">
 
 <table>
-    <tr>
-        <th>Client</th>
-        <th>Campaign</th>
-        <th>Platform</th>
-        <th>Budget</th>
-        <th>Start</th>
-        <th>End</th>
-        <th>Status</th>
-        <th>Action</th>
-    </tr>
+<tr>
+    <th>Client</th>
+    <th>Campaign</th>
+    <th>Platform</th>
+    <th>Budget</th>
+    <th>Start Date</th>
+    <th>End Date</th>
+    <th>Status</th>
+    <th>Action</th>
+</tr>
 
-    {% for r in requests %}
+{% for r in requests %}
 <tr>
     <td>{{ r.client_name }}</td>
     <td>{{ r.campaign_name }}</td>
     <td>{{ r.platform }}</td>
-    <td>{{ r.budget }}</td>
+    <td>₹ {{ r.budget }}</td>
     <td>{{ r.start_date }}</td>
     <td>{{ r.end_date }}</td>
+
+    <!-- STATUS -->
     <td class="{{ r.status|lower }}">{{ r.status }}</td>
 
-    
-
-    <!-- Action -->
+    <!-- ACTION -->
     <td>
-{% if r.status == 'Assigned' %}
-    <span class="badge green">Assigned ✓</span>
-{% elif r.status == 'Approved' %}
-    <form method="POST" action="/assign-video/{{ r.request_id }}">
-        <select name="ad_video" required>
-            <option value="">Select Video</option>
-            {% for v in videos %}
-                <option value="{{ v }}">{{ v }}</option>
-            {% endfor %}
-        </select>
-        <button type="submit">Assign Video</button>
-    </form>
-{% elif r.status == 'Rejected' %}
-    <span class="badge red">Rejected ✖</span>
-{% endif %}
-</td>
 
+    <!-- PENDING -->
+    {% if r.status == 'Pending' or r.status == 'pending' %}
+        <a href="/approve-request/{{ r.request_id }}" class="approve">Approve</a>
+        <a href="/reject-request/{{ r.request_id }}" class="reject">Reject</a>
+
+    <!-- APPROVED -->
+    {% elif r.status == 'Approved' or r.status == 'approved' %}
+        <form method="POST" action="/assign-video/{{ r.request_id }}">
+            <select name="ad_video" required>
+                <option value="">Select Video</option>
+                {% for v in videos %}
+                <option value="{{ v }}">{{ v }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit">Assign</button>
+        </form>
+
+    <!-- REJECTED -->
+    {% elif r.status == 'Rejected' or r.status == 'rejected' %}
+        <span class="badge red">Rejected</span>
+
+    {% else %}
+        <span>---</span>
+    {% endif %}
+
+    </td>
 </tr>
 {% endfor %}
+
+</table>
+
+</div>
+
+</body>
+</html>

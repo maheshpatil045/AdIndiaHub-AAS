@@ -1,68 +1,142 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>View Campaigns</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<title>View Campaigns - AdIndiaHub</title>
+
 <style>
-body{
-    font-family: Arial;
-    background:#f4f6f9;
+*{
     margin:0;
-    padding:30px;
+    padding:0;
+    box-sizing:border-box;
+    font-family: "Segoe UI", sans-serif;
 }
 
+/* BACKGROUND */
+body{
+    background:linear-gradient(135deg,#0f172a,#1e293b);
+    color:white;
+    padding:20px;
+}
+
+/* BACK ICON BUTTON */
+.back-icon{
+    position:fixed;
+    top:20px;
+    left:20px;
+    background:linear-gradient(135deg,#2563eb,#9333ea);
+    color:white;
+    padding:12px 14px;
+    border-radius:50%;
+    font-size:16px;
+    text-decoration:none;
+    box-shadow:0 5px 15px rgba(0,0,0,0.5);
+    transition:0.3s;
+    z-index:9999;
+}
+.back-icon:hover{
+    transform:scale(1.1);
+    background:#0d6efd;
+}
+
+/* TOP BAR */
+.topbar{
+    background:linear-gradient(135deg,#2563eb,#9333ea);
+    padding:12px 20px;
+    border-radius:12px;
+    font-size:20px;
+    font-weight:bold;
+    display:flex;
+    align-items:center;
+    gap:15px;
+    box-shadow:0 10px 25px rgba(0,0,0,0.5);
+}
+
+/* TITLE */
 h2{
     text-align:center;
-    margin-bottom:20px;
+    margin:20px 0;
+    font-size:28px;
+    font-weight:bold;
 }
 
+/* TABLE BOX */
+.table-box{
+    background:rgba(255,255,255,0.08);
+    backdrop-filter:blur(12px);
+    border-radius:15px;
+    padding:10px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.5);
+}
+
+/* TABLE */
 table{
     width:100%;
     border-collapse:collapse;
-    background:#fff;
-    box-shadow:0 10px 20px rgba(0,0,0,0.1);
+    color:white;
 }
 
 th, td{
     padding:12px;
     text-align:center;
-    border-bottom:1px solid #ddd;
+    border-bottom:1px solid rgba(255,255,255,0.2);
 }
 
 th{
-    background:#0b5ed7;
+    background:linear-gradient(135deg,#2563eb,#9333ea);
     color:white;
+    font-size:14px;
 }
 
 tr:hover{
-    background:#f1f1f1;
+    background:rgba(255,255,255,0.1);
 }
 
+/* STATUS BADGES */
 .status{
-    padding:5px 10px;
-    border-radius:5px;
+    padding:6px 12px;
+    border-radius:20px;
     font-size:13px;
-    color:white;
+    font-weight:bold;
 }
 
-.approved{ background:green; }
-.pending{ background:orange; }
-.rejected{ background:red; }
+.approved{ background:#16a34a; }
+.pending{ background:#facc15; color:black; }
+.rejected{ background:#dc2626; }
 
-.btn{
-    padding:6px 10px;
-    background:#dc3545;
+/* DELETE BUTTON */
+.btn-delete{
+    padding:6px 12px;
+    background:#dc2626;
     color:white;
     text-decoration:none;
-    border-radius:5px;
+    border-radius:6px;
+    font-size:13px;
+    transition:0.3s;
 }
 
+.btn-delete:hover{
+    background:#991b1b;
+    transform:scale(1.05);
+}
 </style>
 </head>
 
 <body>
 
-<h2>CAMPAIGN LIST</h2>
+<!-- BACK BUTTON -->
+<a href="/admin-dashboard" class="back-icon">
+    <i class="fa fa-arrow-left"></i>
+</a>
 
+<!-- TOP BAR -->
+<div class="topbar">
+    📊 AdIndiaHub Campaign Manager
+</div>
+
+<h2>📢 Campaign List</h2>
+
+<div class="table-box">
 <table>
 <tr>
     <th>ID</th>
@@ -82,23 +156,25 @@ tr:hover{
     <td>{{ c.campaign_name }}</td>
     <td>{{ c.client_name }}</td>
     <td>{{ c.platform }}</td>
-    <td>₹{{ c.budget }}</td>
+    <td>₹ {{ c.budget }}</td>
     <td>{{ c.start_date }}</td>
     <td>{{ c.end_date }}</td>
-    <td>{{ c.status }}</td>
+
     <td>
-    <a href="/delete-campaign/{{ c.campaign_id }}"
-   onclick="return confirm('Are you sure you want to delete this campaign?')"
-   class="btn btn-danger btn">
-   Delete
-</a>
+        <span class="status {{ c.status|lower }}">{{ c.status }}</span>
+    </td>
 
-
-</td>
+    <td>
+        <a href="/delete-campaign/{{ c.campaign_id }}"
+           onclick="return confirm('Are you sure you want to delete this campaign?')"
+           class="btn-delete">
+           <i class="fa fa-trash"></i> Delete
+        </a>
+    </td>
 </tr>
 {% endfor %}
-
 </table>
+</div>
 
 </body>
 </html>

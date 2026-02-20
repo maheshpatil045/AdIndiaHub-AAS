@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Admin Dashboard</title>
+<title>Admin Dashboard | Adinadiahub</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<!-- Google Font -->
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<!-- Font Awesome आयकॉन्ससाठी -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
 <style>
 *{
@@ -34,6 +34,7 @@ body{
     position:fixed;
     left:0;
     top:0;
+    overflow-y:auto;
 }
 
 .sidebar h2{
@@ -59,11 +60,16 @@ body{
     margin-bottom:10px;
     border-radius:10px;
     font-weight:500;
+    transition: all 0.3s;
 }
 
 .sidebar a:hover{
     background:#2563eb;
     transform:translateX(6px);
+}
+
+.sidebar i {
+    width: 20px;
 }
 
 .logout{
@@ -107,11 +113,19 @@ body{
     border-radius:18px;
     color:#fff;
     box-shadow:0 10px 25px rgba(0,0,0,0.15);
+    transition: transform 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
 }
 
 .card h3{
     font-size:16px;
     opacity:0.9;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 .card h1{
     font-size:36px;
@@ -125,13 +139,227 @@ body{
 .rejected{background:linear-gradient(135deg,#ef4444,#991b1b);}
 .videos{background:linear-gradient(135deg,#f59e0b,#b45309);}
 
-/* ================= CONTENT BOX ================= */
-.content-box{
-    background:#fff;
-    padding:30px;
-    border-radius:20px;
-    box-shadow:0 10px 30px rgba(0,0,0,0.1);
+/* ================= NEW: CAMPAIGN PERFORMANCE ================= */
+.performance-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 30px;
 }
+
+.performance-card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 25px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.performance-card h3 {
+    color: #1e293b;
+    margin-bottom: 20px;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.views-stats {
+    display: flex;
+    align-items: baseline;
+    gap: 15px;
+    margin-bottom: 10px;
+}
+
+.views-number {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.engagement {
+    background: #e8f0fe;
+    color: #2563eb;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.engagement small {
+    color: #64748b;
+    font-weight: normal;
+}
+
+/* ================= CAMPAIGN LIST ================= */
+.campaign-list {
+    margin-top: 20px;
+}
+
+.campaign-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.campaign-name {
+    width: 120px;
+    color: #475569;
+    font-weight: 500;
+}
+
+.bar-container {
+    flex: 1;
+    height: 30px;
+    background: #f1f5f9;
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+}
+
+.bar {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 10px;
+    color: white;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.bar.blue { background: #3b82f6; }
+.bar.green { background: #22c55e; }
+.bar.yellow { background: #f59e0b; }
+.bar.red { background: #ef4444; }
+.bar.dark-red { background: #b91c1c; }
+
+/* ================= SERVER LOAD ================= */
+.server-load {
+    background: #fff;
+    border-radius: 20px;
+    padding: 25px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    margin-bottom: 30px;
+}
+
+.server-load h3 {
+    color: #1e293b;
+    margin-bottom: 20px;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.load-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.load-item {
+    background: #f8fafc;
+    padding: 20px;
+    border-radius: 15px;
+    border: 1px solid #e2e8f0;
+}
+
+.load-item h4 {
+    color: #64748b;
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+}
+
+.load-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 10px;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 10px;
+    background: #e2e8f0;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+    border-radius: 10px;
+    width: 35%;
+}
+
+/* ================= API HEALTH ================= */
+.api-health {
+    background: #fff;
+    border-radius: 20px;
+    padding: 25px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    margin-bottom: 30px;
+}
+
+.api-health h3 {
+    color: #1e293b;
+    margin-bottom: 20px;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.api-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.api-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px;
+    background: #f8fafc;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+}
+
+.api-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.api-info i {
+    font-size: 1.2rem;
+}
+
+.api-info .name {
+    font-weight: 500;
+    color: #1e293b;
+}
+
+.api-status {
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.status-working {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.status-down {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+
 
 /* Scrollbar */
 ::-webkit-scrollbar{width:6px;}
@@ -141,24 +369,23 @@ body{
 }
 </style>
 </head>
-
 <body>
 
 <!-- SIDEBAR -->
 <div class="sidebar">
-    <h2>Admin Dashboard</h2>
+    <h2>Adinadiahub</h2>
     <p>Welcome Admin</p>
 
-    <a href="/admin/messages">📩 Contact Messages</a>
-    <a href="/add-client">➕ Add Client</a>
-    <a href="/add-campaign">📢 Add Campaign</a>
-    <a href="/view-clients">👥 View Clients</a>
-    <a href="/view-campaigns">📊 View Campaigns</a>
-    <a href="/admin-campaign-requests">📝 Campaign Requests</a>
-    <a href="/campaign-list">📋 Campaign List</a>
-    <a href="/upload-ad-video">🎥 Upload Ad Video</a>
-    <a href="/admin/videos">▶ Uploaded Videos</a>
-    <a href="/logout" class="logout">🚪 Logout</a>
+    <a href="/admin/messages"><i class="fas fa-envelope"></i> Contact Messages</a>
+    <a href="/view-clients"><i class="fas fa-users"></i> View Clients</a>
+    <a href="/view-campaigns"><i class="fas fa-chart-line"></i> View Campaigns</a>
+    <a href="/admin-campaign-requests"><i class="fas fa-file-alt"></i> Campaign Requests</a>
+    <a href="/view-feedback"><i class="fas fa-comments"></i> View Feedback</a>
+    <a href="/campaign-list"><i class="fas fa-list"></i> Campaign List</a>
+    <a href="/upload-ad-video"><i class="fas fa-upload"></i> Upload Ad Video</a>
+    <a href="/admin/videos"><i class="fas fa-video"></i> Uploaded Videos</a>
+    <a href="/platform"><i class="fas fa-globe"></i> Ad Platforms</a>
+    <a href="/logout" class="logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
 </div>
 
 <!-- MAIN -->
@@ -172,41 +399,122 @@ body{
 
     <!-- STATS -->
     <div class="stats">
-        <div class="card clients">
-            <h3>Total Clients</h3>
-            <h1>2</h1>
+    <div class="card clients">
+        <h3>Total Clients</h3>
+        <h1>{{ total_clients }}</h1>
+    </div>
+
+    <div class="card campaigns">
+        <h3>Total Campaigns</h3>
+        <h1>{{ total_campaigns }}</h1>
+    </div>
+
+    <div class="card active">
+        <h3>Active Campaigns</h3>
+        <h1>{{ active_campaigns }}</h1>
+    </div>
+
+    <div class="card rejected">
+        <h3>Rejected Requests</h3>
+        <h1>{{ rejected_requests }}</h1>
+    </div>
+
+    <div class="card videos">
+        <h3>Videos Uploaded</h3>
+        <h1>{{ video_count }}</h1>
+    </div>
+</div>
+
+    <!-- CAMPAIGN PERFORMANCE SECTION -->
+    <div class="performance-section">
+        <!-- Total Views Card -->
+        <div class="performance-card">
+            <h3><i class="fas fa-eye" style="color:#3b82f6;"></i> Campaign Performance</h3>
+        
+            <!-- Campaign List with Bars -->
+            <div class="campaign-list">
+                <div class="campaign-item">
+                    <span class="campaign-name">Tata Sierra EV</span>
+                    <div class="bar-container">
+                        <div class="bar blue" style="width: 80%;">12.8k</div>
+                    </div>
+                </div>
+                <div class="campaign-item">
+                    <span class="campaign-name">UPSC 2026 Crash Course</span>
+                    <div class="bar-container">
+                        <div class="bar green" style="width: 65%;">10.5k</div>
+                    </div>
+                </div>
+                <div class="campaign-item">
+                    <span class="campaign-name">Holiday Travel Deals – Explore North East India</span>
+                    <div class="bar-container">
+                        <div class="bar yellow" style="width: 83%;">13.3k</div>
+                    </div>
+                </div>
+                <div class="campaign-item">
+                    <span class="campaign-name">Jaguar-x-series the return of royalty</span>
+                    <div class="bar-container">
+                        <div class="bar red" style="width: 55%;">8.9k</div>
+                    </div>
+                </div>
+                <div class="campaign-item">
+                    <span class="campaign-name">Smartwatch x launch</span>
+                    <div class="bar-container">
+                        <div class="bar dark-red" style="width: 33%;">5.3k</div>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <div class="card campaigns">
-            <h3>Total Campaigns</h3>
-            <h1>2</h1>
-        </div>
+        <!-- Server Load Card -->
+        <div class="performance-card">
+            <h3><i class="fas fa-server" style="color:#f59e0b;"></i> Server Load</h3>
+            <div style="margin-bottom: 30px;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                    <span style="color:#64748b;">CPU Usage</span>
+                    <span style="font-weight:600; color:#1e293b;">35%</span>
+                </div>
+                <div class="progress-bar" style="margin-bottom: 20px;">
+                    <div class="progress-fill" style="width: 35%;"></div>
+                </div>
+                
+                <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                    <span style="color:#64748b;">Active Users</span>
+                    <span style="font-weight:600; color:#1e293b; font-size:1.5rem;">1</span>
+                </div>
+            </div>
 
-        <div class="card active">
-            <h3>Active Campaigns</h3>
-            <h1>2</h1>
-        </div>
-
-        <div class="card rejected">
-            <h3>Rejected Requests</h3>
-            <h1>1</h1>
-        </div>
-
-        <div class="card videos">
-            <h3>Videos Uploaded</h3>
-            <h1>3</h1>
+            <!-- API Health Monitoring -->
+            <h4 style="color:#1e293b; margin-bottom:15px; display:flex; align-items:center; gap:8px;">
+                <i class="fas fa-heartbeat" style="color:#ef4444;"></i> API Health Monitoring
+            </h4>
+            <div class="api-grid" style="grid-template-columns:1fr;">
+                <div class="api-item">
+                    <div class="api-info">
+                        <i class="fab fa-instagram" style="color:#e4405f;"></i>
+                        <span class="name">Instagram</span>
+                    </div>
+                    <span class="api-status status-working">● Working</span>
+                </div>
+                <div class="api-item">
+                    <div class="api-info">
+                        <i class="fab fa-facebook" style="color:#1877f2;"></i>
+                        <span class="name">Facebook</span>
+                    </div>
+                    <span class="api-status status-down">● Down</span>
+                </div>
+                <div class="api-item">
+                    <div class="api-info">
+                        <i class="fab fa-google" style="color:#4285f4;"></i>
+                        <span class="name">Google</span>
+                    </div>
+                    <span class="api-status status-working">● Working</span>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- CONTENT -->
-    <div class="content-box">
-        <h3>Welcome 👋</h3>
-        <p>
-            Use the sidebar to manage clients, campaigns, advertisement videos
-            and review campaign requests.
-        </p>
-    </div>
-
+    
 </div>
 
 </body>

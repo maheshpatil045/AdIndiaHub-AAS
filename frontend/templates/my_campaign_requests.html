@@ -2,35 +2,115 @@
 <html>
 <head>
     <title>My Campaign Requests</title>
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
     <style>
-        body {
-            font-family: Arial;
-            background: #f4f6f8;
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family: "Segoe UI", sans-serif;
         }
-        table {
-            width: 90%;
-            margin: 30px auto;
-            border-collapse: collapse;
-            background: white;
+
+        body{
+            min-height:100vh;
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            color:white;
+            padding-top:40px;
         }
-        th, td {
-            padding: 12px;
-            border: 1px solid #ccc;
-            text-align: center;
+
+        /* Floating Back Button */
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: #00eaff;
+            color: black;
+            padding: 12px 14px;
+            border-radius: 50%;
+            font-size: 18px;
+            text-decoration: none;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+            transition: 0.3s;
+            z-index: 9999;
         }
-        th {
-            background: #0d6efd;
-            color: white;
+
+        .back-btn:hover {
+            transform: scale(1.1);
+            background:white;
         }
-        .pending { color: orange; }
-        .approved { color: green; }
-        .rejected { color: red; }
+
+        h2{
+            text-align:center;
+            font-size:30px;
+            margin-bottom:20px;
+        }
+
+        /* Table Container */
+        .table-box{
+            width:92%;
+            margin:auto;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(15px);
+            padding:20px;
+            border-radius:15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+
+        table{
+            width:100%;
+            border-collapse:collapse;
+            color:white;
+        }
+
+        th, td{
+            padding:12px;
+            text-align:center;
+        }
+
+        th{
+            background: rgba(0,234,255,0.2);
+            font-size:15px;
+        }
+
+        tr{
+            border-bottom:1px solid rgba(255,255,255,0.2);
+        }
+
+        tr:hover{
+            background: rgba(0,234,255,0.15);
+        }
+
+        /* Status Colors */
+        .pending{
+            color: #ffc107;
+            font-weight:bold;
+        }
+
+        .approved{
+            color: #00ff88;
+            font-weight:bold;
+        }
+
+        .rejected{
+            color: #ff4d4d;
+            font-weight:bold;
+        }
     </style>
 </head>
+
 <body>
 
-<h2 style="text-align:center;">My Campaign Requests</h2>
+<!-- Back Icon -->
+<a href="/client-dashboard" class="back-btn">
+    <i class="fas fa-arrow-left"></i>
+</a>
 
+<h2>📊 My Campaign Requests</h2>
+
+<div class="table-box">
 <table>
     <tr>
         <th>Campaign</th>
@@ -45,13 +125,14 @@
     <tr>
         <td>{{ r.campaign_name }}</td>
         <td>{{ r.platform }}</td>
-        <td>{{ r.budget }}</td>
+        <td>₹{{ r.budget }}</td>
         <td>{{ r.start_date }}</td>
         <td>{{ r.end_date }}</td>
         <td class="{{ r.status|lower }}">{{ r.status }}</td>
     </tr>
     {% endfor %}
 </table>
+</div>
 
 </body>
 </html>

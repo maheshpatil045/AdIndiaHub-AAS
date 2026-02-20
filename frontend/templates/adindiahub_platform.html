@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AdIndiaHub Platforms</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+/* Simple Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: #f0f2f5;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+/* Main Container */
+.container {
+    max-width: 1200px;
+    width: 100%;
+}
+
+/* Header Section */
+.header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.header h1 {
+    font-size: 36px;
+    color: #333;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.header p {
+    color: #666;
+    font-size: 16px;
+    font-weight: 400;
+}
+
+/* Platform Grid */
+.platform-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+/* Platform Cards */
+.platform-card {
+    background: white;
+    border-radius: 12px;
+    padding: 30px 20px;
+    text-align: center;
+    text-decoration: none;
+    color: #333;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+.platform-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+}
+
+/* Platform Icons */
+.platform-card i {
+    font-size: 48px;
+}
+
+.platform-card span {
+    font-size: 24px;
+    font-weight: 600;
+}
+
+/* Platform Colors */
+.instagram { color: #E1306C; }
+.facebook { color: #3b5998; }
+.youtube { color: #FF0000; }
+.google { color: #4285F4; }
+.mmt { color: #00A8E1; }
+
+.platform-card:hover .instagram { color: #c1356c; }
+.platform-card:hover .facebook { color: #2d4373; }
+.platform-card:hover .youtube { color: #cc0000; }
+.platform-card:hover .google { color: #3367d6; }
+.platform-card:hover .mmt { color: #0086b3; }
+
+/* Platform Name */
+.platform-name {
+    font-size: 18px;
+    font-weight: 500;
+    color: #555;
+}
+
+/* Simple Footer */
+.footer {
+    text-align: center;
+    margin-top: 40px;
+    color: #888;
+    font-size: 14px;
+}
+
+.footer i {
+    color: #ff6b6b;
+    font-size: 12px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .header h1 {
+        font-size: 28px;
+    }
+    
+    .header p {
+        font-size: 14px;
+    }
+    
+    .platform-card i {
+        font-size: 40px;
+    }
+    
+    .platform-card span {
+        font-size: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .platform-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Header -->
+    <div class="header">
+        <h1>AdIndiaHub Platforms</h1>
+        <p>Connect with top advertising platforms</p>
+    </div>
+
+    <!-- Platform Grid -->
+    <div class="platform-grid">
+        <!-- Instagram -->
+        <a href="https://www.instagram.com/" target="_blank" class="platform-card">
+            <i class="fab fa-instagram instagram"></i>
+            <span class="instagram">Instagram</span>
+            <div class="platform-name">@instagram</div>
+        </a>
+
+        <!-- Facebook -->
+        <a href="https://www.facebook.com/" target="_blank" class="platform-card">
+            <i class="fab fa-facebook-f facebook"></i>
+            <span class="facebook">Facebook</span>
+            <div class="platform-name">@facebook</div>
+        </a>
+
+        <!-- YouTube -->
+        <a href="https://www.youtube.com/" target="_blank" class="platform-card">
+            <i class="fab fa-youtube youtube"></i>
+            <span class="youtube">YouTube</span>
+            <div class="platform-name">@youtube</div>
+        </a>
+
+        <!-- Google -->
+        <a href="https://www.google.com/" target="_blank" class="platform-card">
+            <i class="fab fa-google google"></i>
+            <span class="google">Google</span>
+            <div class="platform-name">@google</div>
+        </a>
+
+        <!-- MakeMyTrip -->
+        <a href="https://www.makemytrip.com/" target="_blank" class="platform-card">
+            <span class="mmt" style="font-size: 48px; font-weight: 700;">MMT</span>
+            <span class="mmt">MakeMyTrip</span>
+            <div class="platform-name">@makemytrip</div>
+        </a>
+    </div>
+
+    <!-- Simple Footer -->
+    <div class="footer">
+        <p>AdIndiaHub  2026 | All platforms connected</p>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,106 +1,129 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Uploaded Ad Videos</title>
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            min-height: 100vh;
-            padding: 30px;
-        }
+<title>Uploaded Ad Videos</title>
 
-        h2 {
-            text-align: center;
-            color: #fff;
-            margin-bottom: 30px;
-            font-size: 28px;
-        }
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-        .container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 25px;
-            max-width: 1200px;
-            margin: auto;
-        }
+<style>
 
-        .video-card {
-            background: #fff;
-            border-radius: 12px;
-            padding: 15px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-            transition: 0.3s ease;
-        }
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(120deg, #1d2671, #c33764);
+    min-height: 100vh;
+    padding: 40px;
+}
 
-        .video-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 30px rgba(0,0,0,0.3);
-        }
+/* Page Title */
+h2 {
+    text-align: center;
+    color: #fff;
+    margin-bottom: 30px;
+    font-size: 30px;
+    font-weight: bold;
+}
 
-        .video-title {
-            font-weight: bold;
-            margin-bottom: 10px;
-            color: #333;
-            text-align: center;
-        }
+/* Video Grid */
+.container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+    max-width: 1200px;
+    margin: auto;
+}
 
-        video {
-            width: 100%;
-            height: 200px;
-            border-radius: 8px;
-            background: #000;
-        }
+/* Video Card Glass Effect */
+.video-card {
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(12px);
+    border-radius: 15px;
+    padding: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    transition: 0.3s;
+    border: 1px solid rgba(255,255,255,0.2);
+}
 
-        .no-videos {
-            text-align: center;
-            color: #fff;
-            font-size: 18px;
-            margin-top: 50px;
-        }
+.video-card:hover {
+    transform: translateY(-8px);
+}
 
-        .back-btn {
-            display: block;
-            width: 200px;
-            margin: 40px auto 0;
-            text-align: center;
-            padding: 10px;
-            background: #00c6ff;
-            color: white;
-            text-decoration: none;
-            font-weight: bold;
-            border-radius: 25px;
-            transition: 0.3s ease;
-        }
+/* Video Title */
+.video-title {
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: white;
+    text-align: center;
+}
 
-        .back-btn:hover {
-            background: #0072ff;
-            transform: scale(1.05);
-        }
-    </style>
+/* Video Player */
+video {
+    width: 100%;
+    height: 200px;
+    border-radius: 10px;
+    background: black;
+}
+
+/* No Video Text */
+.no-videos {
+    text-align: center;
+    color: white;
+    font-size: 18px;
+    margin-top: 50px;
+}
+
+/* Floating Back Icon */
+.back-icon {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    background: white;
+    color: #0072ff;
+    padding: 12px 15px;
+    border-radius: 50%;
+    font-size: 18px;
+    text-decoration: none;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+    transition: 0.3s;
+    z-index: 9999;
+}
+
+.back-icon:hover {
+    background: #0072ff;
+    color: white;
+    transform: scale(1.15);
+}
+
+
+</style>
 </head>
+
 <body>
 
-    <h2>Uploaded Advertisement Videos</h2>
+<!-- Floating Back Icon -->
+<a href="/admin-dashboard" class="back-icon">
+    <i class="fa fa-arrow-left"></i>
+</a>
 
-    {% if videos %}
-        <div class="container">
-            {% for video in videos %}
-                <div class="video-card">
-                    <div class="video-title">{{ video }}</div>
-                    <video controls>
-                        <source src="{{ url_for('static', filename='ads_videos/' + video) }}">
-                        Your browser does not support the video tag.
-                    </video>
-                </div>
-            {% endfor %}
+<h2>📺 Uploaded Advertisement Videos</h2>
+
+{% if videos %}
+<div class="container">
+    {% for video in videos %}
+        <div class="video-card">
+            <div class="video-title">{{ video }}</div>
+            <video controls>
+                <source src="{{ url_for('static', filename='ads_videos/' + video) }}">
+                Your browser does not support the video tag.
+            </video>
         </div>
-    {% else %}
-        <p class="no-videos">No videos uploaded yet.</p>
-    {% endif %}
+    {% endfor %}
+</div>
+{% else %}
+<p class="no-videos">No videos uploaded yet.</p>
+{% endif %}
 
-    <a href="/admin-dashboard" class="back-btn">⬅ Back to Dashboard</a>
 
 </body>
 </html>
