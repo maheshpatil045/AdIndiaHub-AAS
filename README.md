@@ -1,11 +1,3 @@
-छान 👍 महेश, README फाइल खूप important असते (GitHub + कॉलेज प्रोजेक्ट submission साठी).
-मी तुला Professional, human-friendly, exam + GitHub ready README.md देतो. तू direct copy-paste करू शकतोस.
-
-
----
-
-✅ README.md (Advertisement Agency System Project)
-
 # 📢 AdIndiaHub – Advertisement Agency System
 
 AdIndiaHub is a web-based Advertisement Agency Management System developed using Python Flask and MySQL.  
